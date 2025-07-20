@@ -1,36 +1,145 @@
-general {
-	output_format = "i3bar"
-	colors = false
-	markup = pango
-	interval = 5
-}
 
-order += "load"
-order += "wireless wlan0"
-order += "volume master"
-order += "time"
+set $super Mod1
 
 
-load {
-	format = "<span background='#cc241d'> ➤ </span><span background='#1d2021'>  %5min Load  </span>"
-}
+# set font
+font pango: GohuFont 14 Nerd Font  9
 
-wireless wlan0 {
-	format_up = "<span background='#98971a'>  ➤ </span><span background='#1d2021'>  %essid  </span>"
-	format_down = "<span background='#98971a'>  ➤ </span><span background='#1d2021'>  Disconnected  </span>"
-}
+# use mouse+$super to drag floating windows to their wanted position
+floating_modifier $super
 
-volume master {
-	format = "<span background='#d79921'> ➤ </span><span background='#1d2021'>  %volume  </span>"
-	format_muted = "<span background='#d79921'> ➤ </span><span background='#1d2021'>  Muted  </span>"
-	device = "default"
-	mixer = "Master"
-	mixer_idx = 0
-}
+# autostart programs
+exec xrandr --output DP-4 --mode 3440x1440 --rate 180
+exec nitrogen --restore
+exec picom
+exec_always --no-startup-id i3-autolayout autolayout
 
-time {
-	format = "<span background='#458588'> ➤ </span><span background='#1d2021'> %r on %A %b/%d/%Y </span>"
-}
+# start a terminal
+bindsym $super+Return exec kitty
+
+# start rofi (a program launcher)
+bindsym $super + k exec rofi -show run -font "GohuFont 14 Nerd Font 12"
+
+# common apps keybinds
+bindsym Print exec scrot 'Cheese_%a-%d%b%y_%H.%M.png' -e 'xdg-open ~/$f'
+bindsym $super+l exec i3lock -i /home/elijah/Downloads/foggyforestfixedfoggytry12.png
+bindsym $super+m exec firefox 
+bindsym $super+n exec spotify
+bindsym $super+y exec kitty yazi
+
+# change volume and brightness
+bindsym XF86AudioRaiseVolume exec i3-volume up 1
+bindsym XF86AudioLowerVolume exec i3-volume down 1
+bindsym XF86AudioMute exec amixer set Master toggle
+bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+# kill focused window
+bindsym $super+backslash kill
+
+# change focus
+bindsym $super+Left focus left
+bindsym $super+Down focus down
+bindsym $super+Up focus up
+bindsym $super+Right focus right
+
+# move focused window
+bindsym $super+Shift+Left move left
+bindsym $super+Shift+Down move down
+bindsym $super+Shift+Up move up
+bindsym $super+Shift+Right move right
+
+# split in horizontal or vertical orientation
+bindsym $super+h split h
+bindsym $super+v split v
+
+# change split direction for already opened windows
+bindsym $super+s layout toggle split
+
+# enter fullscreen mode for the focused container
+bindsym $super+f fullscreen toggle
+
+# toggle tiling / floating
+bindsym $super+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $super+Shift+space focus mode_toggle
+
+# switch to workspace
+bindsym $super+Control+Right workspace next
+bindsym $super+Control+Left workspace prev
+bindsym $super+1 workspace 1:I
+bindsym $super+2 workspace 2:II
+bindsym $super+3 workspace 3:III
+bindsym $super+4 workspace 4:IV
+bindsym $super+5 workspace 5:V
+bindsym $super+6 workspace 6:VI
+
+# move focused container to workspace
+bindsym $super+Shift+1 move container to workspace 1:I
+bindsym $super+Shift+2 move container to workspace 2:II
+bindsym $super+Shift+3 move container to workspace 3:III
+bindsym $super+Shift+4 move container to workspace 4:IV
+bindsym $super+Shift+5 move container to workspace 5:V
+bindsym $super+Shift+6 move container to workspace 6:VI
+
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $super+BackSpace exec "i3-msg restart"
+
+# exit i3
+bindsym $super+q exec "i3-nagbar -t warning -m 'Really, exit?' \
+-b 'Yes' 'i3-msg exit'"
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+	bindsym Left resize shrink width 5 px or 5 ppt
+	bindsym Down resize grow height 5 px or 5 ppt
+	bindsym Up resize shrink height 5 px or 5 ppt
+	bindsym Right resize grow width 5 px or 5 ppt
+	bindsym Return mode "default"
+
+	}
+bindsym $super+r mode "resize"
+
+# panel
+bar {
+	status_command i3status 
+	position top
+	workspace_min_width 10
+	padding 0px 8px 2px 8px
+	strip_workspace_numbers yes
+ 
+	colors {
+		background #1d2021
+	statusline #fbf1c7
+	separator #fbf1c7
+
+	# colour of border, background, and text
+	focused_workspace #928374 #928374 #fbf1c7
+	active_workspace #141c21 #141c21 #fbf1c7
+	inactive_workspace #1d2021 #1d2021 #fbf1c7
+    urgent_workspace #141c21 #cc241d #fbf1c7
+	
+	}
+
+	}
+
+client.focused #a89984 #263640 #93a1a1 #ebdbb2 #ebdbb2
+client.focused_inactive #1d2021 #b08500 #93a1a1 #263640 #1d2021
+client.unfocused #a89984 #b08500 #93a1a1 #263640 #282828
+client.urgent #a89984 #b08500 #93a1a1 #263640 #cc241d
+client.placeholder #263640 #b08500 #93a1a1 #263640 #928374
+client.background #263640
+
+
+# window rules, you can find the window class using xprop
+for_window [class=Eog|Sxiv|feh|mpv|Vlc|File-roller|Xarchiver] floating enable
+for_window [class=Eog|Sxiv|feh|mpv|Vlc|File-roller|Xarchiver] focus
+for_window [class=".*"] border pixel 4
+hide_edge_borders smart
+gaps inner 15
+gaps outer 1
+
+
 
 
 
