@@ -1,0 +1,36 @@
+general {
+	output_format = "i3bar"
+	colors = false
+	markup = pango
+	interval = 5
+}
+
+order += "load"
+order += "wireless wlan0"
+order += "volume master"
+order += "time"
+
+
+load {
+	format = "<span background='#cc241d'> ➤ </span><span background='#1d2021'>  %5min Load  </span>"
+}
+
+wireless wlan0 {
+	format_up = "<span background='#98971a'>  ➤ </span><span background='#1d2021'>  %essid  </span>"
+	format_down = "<span background='#98971a'>  ➤ </span><span background='#1d2021'>  Disconnected  </span>"
+}
+
+volume master {
+	format = "<span background='#d79921'> ➤ </span><span background='#1d2021'>  %volume  </span>"
+	format_muted = "<span background='#d79921'> ➤ </span><span background='#1d2021'>  Muted  </span>"
+	device = "default"
+	mixer = "Master"
+	mixer_idx = 0
+}
+
+time {
+	format = "<span background='#458588'> ➤ </span><span background='#1d2021'> %r on %A %b/%d/%Y </span>"
+}
+
+
+
